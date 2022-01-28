@@ -40,26 +40,24 @@ public class Task2ReadUserFile {
             String value1 = ""; // переменная которая хранить значение для переменной name
             String value2 = ""; // переменная которая хранить значение для переменной age
             while ((c = reader.read()) != -1) { // выполнять пока следующий бит не равен -1 (еще есть что читать)
-                if (c == 32 & name.equals("")) { // если бит == пробел, и название переменной еще не указано
+                if ((char) c == ' ' & name.equals("")) { // если бит == пробел, и название переменной еще не указано
                     name = result.toString(); // назвать переменную
                     result = new StringBuilder(); // сбросить результат
                     continue; // следующий бит
                 }
-                if (c == 13 & age.equals("")) { // если это конец строки и название переменной аргумента еще пусто
+                if ((char) c == '\n' & age.equals("")) { // если это конец строки и название переменной аргумента еще пусто
                     age = result.toString(); // присвоить название переменной
                     result = new StringBuilder(); //сбросить результата
-                    c = reader.read(); // пропустить шаг с битом 10
                     continue; // следующий бит
                 }
-                if (c == 32 & !name.equals("")) { // если пробел и переменная уже имеет свое имя
+                if ((char) c == ' ' & !name.equals("")) { // если пробел и переменная уже имеет свое имя
                     value1 = result.toString(); // значение переменную
                     result = new StringBuilder(); // сбросить результат
                     continue; // следующий бит
                 }
-                if (c == 13 & !age.equals("")) { // если это конец строки и название переменной аргумента еще пусто
+                if ((char) c == '\n' & !age.equals("")) { // если это конец строки и название переменной аргумента еще пусто
                     value2 = result.toString(); // присвоить название переменной
                     result = new StringBuilder(); //сбросить результата
-                    c = reader.read(); // пропустить шаг с битом 10
                     User test1 = new User(name, value1, age, value2); // создать экземпляр класса Пользователь
                     res.add(test1.toString()); // добавить в коллекцию
                     continue; // следующий бит
@@ -84,7 +82,9 @@ public class Task2ReadUserFile {
     }
 
     public static void main(String[] args) { // запускалка
-        writeToFile(readFileWithBuffer("src\\main\\java\\hw9v1\\file2.txt"), "src\\main\\java\\hw9v1\\user.json"); // прочитать из файла, и записать в файл
+        ArrayList<String> argsd = readFileWithBuffer("src\\main\\java\\hw9v1\\file2.txt"); // прочитать из файла
+        System.out.println(argsd);
+        writeToFile(argsd, "src\\main\\java\\hw9v1\\user.json"); // записать в файл
     }
 }
 
@@ -93,6 +93,10 @@ class User {
     private final String age;
 
     User(String name, String value1, String age, String value2) {
+        name = name.strip(); //очистить от невидимых символов в начале о конце строки
+        value1 = value1.strip(); //очистить от невидимых символов в начале о конце строки
+        age = age.strip(); //очистить от невидимых символов в начале о конце строки
+        value2 = value2.strip(); //очистить от невидимых символов в начале о конце строки
         this.name = "\"" + name + "\": \"" + value1 + "\"";
         this.age = "\"" + age + "\": \"" + value2 + "\"";
     }
