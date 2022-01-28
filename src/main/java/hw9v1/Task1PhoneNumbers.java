@@ -26,12 +26,11 @@ public class Task1PhoneNumbers {
             int count; // целочисленное значение бита
             StringBuilder result = new StringBuilder(); //строка в которую будем запихивать прочитанное
             while ((count = fail.read()) != -1) { //выполнять пока, есть что читать
-                if (count == 13 ) { // если пошел бит с инфой о переходе на следующую строку
+                if ((char) count == '\n') { // если пошел бит с инфой о переходе на следующую строку
                     if (compareWithTemplate(result.toString())) { // сравнить прочитанную строку с шаблоном телефонных номеров
                         System.out.println(result); //если номер соответствует вывести его в консоль
                     }
                     result = new StringBuilder(); // очистить строку
-                    count = fail.read(); // перейти на новую строку в читаемом файле
                 } else { //иначе, это не бит перехода на новую строку
                     result.append((char) count); // добавить бит в строку для анализа
                 }
@@ -46,9 +45,10 @@ public class Task1PhoneNumbers {
 
 
     private static boolean compareWithTemplate(String text) { // метод сравнивает строку с шаблоном
-        String test = text.replaceAll("[(][\\d]+[)][ ][\\d]+[-][\\d]+", "1"); // если формат (xxx) xxx-xxxx
-        test = test.replaceAll("[\\d]+[-][\\d]+[-][\\d]+", "1"); // если формат xxx-xxx-xxxx
-        if (test.equals("1")) { return true;} //если есть соответствие формату
+        text = text.strip(); //очистить от невидимых символов в начале о конце строки
+        String test = text.replaceAll("[\\d][\\d][\\d][-][\\d][\\d][\\d][-][\\d][\\d][\\d][\\d]", "2"); // если формат xxx-xxx-xxxx
+        test = test.replaceAll("[(][\\d]+[)][ ][\\d]+[-][\\d]+", "1"); // если формат (xxx) xxx-xxxx
+        if (test.equals("1") | test.equals("2")) { return true;} //если есть соответствие формату
         return false; // совпадений с шаблонами нету
     }
 
